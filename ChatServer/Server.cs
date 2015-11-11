@@ -28,7 +28,7 @@ namespace ChatServer {
                 }
             }
         }
-    
+
         public static void SendServerMessageExcept(ServerClient sendingClient, string message) {
             foreach (ServerClient client in _nickName.Values) {
                 if (client == sendingClient) {
@@ -50,19 +50,18 @@ namespace ChatServer {
             }
         }
 
-        public static string SendPlayerNames() {
+        public static void SendPlayerNames() {
             string names = "";
             foreach (ServerClient client in _nickName.Values) {
-                names += client.NickName + client.Status + ",";
+                names += client.NickName + ",";
             }
             if (names.Equals("")) {
-                return "";
+                return;
             }
             names = names.Remove(names.Length - 1);
             foreach (ServerClient client in _nickName.Values) {
                 client.WriteLine("Players:" + names);
             }
-            return names;
         }
 
         private void newCommunication(TcpClient connection) {

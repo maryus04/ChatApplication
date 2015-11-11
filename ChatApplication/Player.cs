@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Net.Sockets;
 using System.IO;
 using NAudio.Wave;
+using System.Threading;
 
 namespace ChatApplication {
     public class Player {
@@ -22,6 +23,7 @@ namespace ChatApplication {
         public StreamReader Reader { get; set; }
 
         private WaveIn waveIn;
+        public int DeviceInNumber = 0;
         private WaveOut waveOut;
         private BufferedWaveProvider waveProvider;
         private UncompressedPcmChatCodec audioCodec;
@@ -81,7 +83,7 @@ namespace ChatApplication {
         private void InitializeWaveIn() {
             waveIn = new WaveIn();
             waveIn.BufferMilliseconds = 200;
-            waveIn.DeviceNumber = 0; // TODO: HARD CODED
+            waveIn.DeviceNumber = DeviceInNumber;
             waveIn.WaveFormat = audioCodec.RecordFormat;
             waveIn.DataAvailable += waveIn_DataAvailable;
             waveIn.StartRecording(); // TODO: MUTE UNMUTE
@@ -97,12 +99,41 @@ namespace ChatApplication {
             WriteLine("Sound:" + string.Join(",", encoded));
         }
 
-        public static Player getInstance() {
+        public static Player GetInstance() {
             if (instance == null) {
                 instance = new Player();
             }
             return instance;
         }
 
+        public void SendNickName(string myName) {
+            WriteLine("MyName:" + myName);
+        }
+
+        public void InitConnection(string serverIp) {
+            if (TcpClient != null) return;
+            if (!InitializeConnection(serverIp)) return;
+
+            InitializeStream();
+
+            ReadMessages();
+        }
+
+        private bool InitializeConnection(string serverIp) {
+            try {
+                TcpClient = new TcpClient();
+                TcpClient.Connect(serverIp, 4296);
+            } catch {
+                return false;
+            }
+            return true;
+        }
+
+        private void ReadMessages() {
+            Thread ReadIncomming = new Thread(() => MessageReader.ReadMessages());
+            ReadIncomming.SetApartmentState(ApartmentState.STA);
+            ReadIncomming.Name = "ReadMessages";
+            ReadIncomming.Start();
+        }
     }
 }

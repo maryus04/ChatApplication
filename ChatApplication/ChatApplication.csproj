@@ -61,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ServerFinder.cs" />
     <Compile Include="UncompressedPcmChatCodec.cs" />
     <Compile Include="UserControls\ChatUC.xaml.cs">
       <DependentUpon>ChatUC.xaml</DependentUpon>

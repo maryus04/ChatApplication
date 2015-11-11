@@ -16,8 +16,6 @@ namespace ChatServer {
         public StreamReader Reader { get; set; }
         public StreamWriter Writer { get; set; }
 
-        public string Status = "-- Main menu";
-
         public string NickName {
             get { return nickName; }
             set { nickName = value; }

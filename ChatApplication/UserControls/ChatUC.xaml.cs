@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,8 +19,25 @@ namespace ChatApplication.UserControls {
     /// Interaction logic for ChatUC.xaml
     /// </summary>
     public partial class ChatUC : UserControl {
+        private static ChatUC instance;
+
+        private ObservableCollection<string> playerListCollection = new ObservableCollection<string>();
+
         public ChatUC() {
+            instance = this;
             InitializeComponent();
+            playerList.ItemsSource = playerListCollection;
+        }
+
+        public static ChatUC GetInstance() {
+            return instance;
+        }
+
+        public void SetNickNames(params string[] nickNames) {
+            this.Dispatcher.Invoke((Action)(() => {
+                playerListCollection.Clear();
+                foreach (var nickName in nickNames) { playerListCollection.Add(nickName); }
+            }));
         }
     }
 }

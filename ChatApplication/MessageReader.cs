@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Shapes;
+using ChatApplication.UserControls;
 
 namespace ChatApplication {
     class MessageReader {
@@ -13,7 +14,7 @@ namespace ChatApplication {
 
         public static void ReadMessages() {
             while (true) {
-                string entireMessage = Player.getInstance().ReadLine();
+                string entireMessage = Player.GetInstance().ReadLine();
                 if (entireMessage == null || entireMessage.Length == 0) {
                     break;
                 }
@@ -21,12 +22,12 @@ namespace ChatApplication {
 
                 switch (_method) {
                     case "ConnectionAccepted:":
-                        Player.getInstance().Name = _message;
-                        Player.getInstance().Connected = true;
-                        MainWindow.getInstance().SetAvaibility();
+                        Player.GetInstance().Name = _message;
+                        Player.GetInstance().Connected = true;
+                        //MainWindow.getInstance().SetAvaibility(); TODO: MOVE TO CHATUC
                         break;
                     case "NickNameInUse:":
-                        MainWindow.getInstance().SetError("Nickname already in use");
+                        //MainWindow.getInstance().SetError("Nickname already in use"); TODO: TREAT ERROR IN LOGINUC
                         break;
                     case "MainWindowMessage:":
                         string name = MessageParser.GetNick(_message);
@@ -39,10 +40,10 @@ namespace ChatApplication {
                         }
                         break;
                     case "Players:":
-                        MainWindow.getInstance().SetPlayerList(_message.Split(','));
+                        ChatUC.GetInstance().SetNickNames(_message.Split(','));
                         break;
                     case "Sound:":
-                        Player.getInstance().PlayAudio(MessageParser.ToByteArray(_message));
+                        Player.GetInstance().PlayAudio(MessageParser.ToByteArray(_message));
                         break;
                     case "PlayerReady:":
                         MainWindow.getInstance().UpdatePlayerStatus(MessageParser.GetName(_message), MessageParser.GetValue(_message));
