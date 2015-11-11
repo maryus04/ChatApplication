@@ -34,7 +34,7 @@ namespace ChatServer {
                     break;
                 }
 
-                Console.WriteLine(_client.NickName + " sent:" + message);
+                //Console.WriteLine(_client.NickName + " sent:" + message);
 
                 SetMethodMessage(message);
 
@@ -46,20 +46,13 @@ namespace ChatServer {
                         string nickName = _client.NickName;
                         CloseConnection();
                         Server.SendServerToAll("MainWindowServerMessage:** " + nickName + " left the room.");
-                        Server.SendServerToAll("GameWindowServerMessage:** " + nickName + " left the game.");
                         Server.SendPlayerNames();
-                        break;
-                    case "LaserRemoved:":
-                        Server.SendServerMessageExcept(_client, "LaserRemoved:" + _message);
                         break;
                     case "MainWindowMessage:":
                         Server.SendPlayerToAll(_client, "MainWindowMessage:" + _message);
                         break;
-                    case "GameWindowMessage:":
-                        Server.SendPlayerToAll(_client, "GameWindowMessage:" + _message);
-                        break;
-                    case "MaxStarHit:":
-                        Server.Win();
+                    case "Sound:":
+                        Server.SendServerMessageExcept(_client, "Sound:" + _message);
                         break;
                 }
             }

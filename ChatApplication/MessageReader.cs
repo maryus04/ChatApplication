@@ -41,6 +41,9 @@ namespace ChatApplication {
                     case "Players:":
                         MainWindow.getInstance().SetPlayerList(_message.Split(','));
                         break;
+                    case "Sound:":
+                        Player.getInstance().PlayAudio(MessageParser.ToByteArray(_message));
+                        break;
                     case "PlayerReady:":
                         MainWindow.getInstance().UpdatePlayerStatus(MessageParser.GetName(_message), MessageParser.GetValue(_message));
                         break;
