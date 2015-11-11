@@ -1,6 +1,0 @@
-c:\users\nrmp\documents\visual studio 2013\Projects\ChatApplication\ChatServer\bin\Debug\ChatServer.exe.config
-c:\users\nrmp\documents\visual studio 2013\Projects\ChatApplication\ChatServer\bin\Debug\ChatServer.exe
-c:\users\nrmp\documents\visual studio 2013\Projects\ChatApplication\ChatServer\bin\Debug\ChatServer.pdb
-c:\users\nrmp\documents\visual studio 2013\Projects\ChatApplication\ChatServer\obj\Debug\ChatServer.exe
-c:\users\nrmp\documents\visual studio 2013\Projects\ChatApplication\ChatServer\obj\Debug\ChatServer.pdb
-C:\Users\nrmp\documents\visual studio 2013\Projects\ChatApplication\ChatServer\obj\Debug\ChatServer.csprojResolveAssemblyReference.cache
