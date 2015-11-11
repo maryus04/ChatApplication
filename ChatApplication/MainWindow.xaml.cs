@@ -19,6 +19,7 @@ using System.Net.NetworkInformation;
 using System.Diagnostics;
 using System.Windows.Controls;
 using System.Text.RegularExpressions;
+using ChatApplication.UserControls;
 
 namespace ChatApplication {
     public partial class MainWindow : Window {
@@ -77,6 +78,8 @@ namespace ChatApplication {
         public MainWindow() {
             instance = this;
             InitializeComponent();
+            var userControl=new LoginUC();
+            this.Content=userControl;
         }
 
         private void InitiateConnection(object sender, RoutedEventArgs e) {
