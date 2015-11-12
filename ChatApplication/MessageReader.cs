@@ -24,7 +24,7 @@ namespace ChatApplication {
                     case "ConnectionAccepted:":
                         Player.GetInstance().Name = _message;
                         Player.GetInstance().Connected = true;
-                        //MainWindow.getInstance().SetAvaibility(); TODO: MOVE TO CHATUC
+                        LoginUC.GetInstance().StartChat();
                         break;
                     case "NickNameInUse:":
                         //MainWindow.getInstance().SetError("Nickname already in use"); TODO: TREAT ERROR IN LOGINUC
@@ -32,21 +32,16 @@ namespace ChatApplication {
                     case "MainWindowMessage:":
                         string name = MessageParser.GetNick(_message);
                         _message = MessageParser.RemoveNickFrom(_message);
-                        MainWindow.getInstance().AppendText(name + _message + "\r\n");
+                        ChatUC.GetInstance().AppendText(name + _message + "\r\n");
                         break;
                     case "MainWindowServerMessage:":
-                        if (MainWindow.getInstance() != null) {
-                            MainWindow.getInstance().AppendText(_message + "\r\n");
-                        }
+                        ChatUC.GetInstance().AppendText(_message + "\r\n");
                         break;
                     case "Players:":
                         ChatUC.GetInstance().SetNickNames(_message.Split(','));
                         break;
                     case "Sound:":
                         Player.GetInstance().PlayAudio(MessageParser.ToByteArray(_message));
-                        break;
-                    case "PlayerReady:":
-                        MainWindow.getInstance().UpdatePlayerStatus(MessageParser.GetName(_message), MessageParser.GetValue(_message));
                         break;
                 }
             }

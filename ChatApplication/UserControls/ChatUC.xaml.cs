@@ -33,11 +33,37 @@ namespace ChatApplication.UserControls {
             return instance;
         }
 
+        private void send_KeyDown(object sender, KeyEventArgs e) {
+            if (send.Text == "" || e.Key != Key.Enter) return;
+            Player.GetInstance().WriteLine("MainWindowMessage:" + send.Text);
+            send.Text = "";
+        }
+
         public void SetNickNames(params string[] nickNames) {
             this.Dispatcher.Invoke((Action)(() => {
                 playerListCollection.Clear();
                 foreach (var nickName in nickNames) { playerListCollection.Add(nickName); }
             }));
+        }
+
+        public void AppendText(string message) {
+            this.Dispatcher.Invoke((Action)(() => { received.Text += message; received.ScrollToEnd(); }));
+        }
+
+        public void SetMicButtonText(string text) {
+            this.Dispatcher.Invoke((Action)(() => { toggleMicButton.Content = text; }));
+        }
+
+        private void toggleMicButton_Click(object sender, RoutedEventArgs e) {
+            Player.GetInstance().ToggleMic();
+        }
+
+        private void toggleSpButton_Click(object sender, RoutedEventArgs e) {
+            Player.GetInstance().ToggleSpeaker();
+        }
+
+        public void SetSpButtonText(string text) {
+            this.Dispatcher.Invoke((Action)(() => { toggleSpButton.Content = text; }));
         }
     }
 }

@@ -53,7 +53,10 @@ namespace ChatApplication.UserControls {
         private void Login_Click(object sender, RoutedEventArgs e) {
             Player.GetInstance().InitConnection(serverIp.Text);
             Player.GetInstance().SendNickName(PlayerNameTB.Text);
-            this.Content = new ChatUC();
+        }
+
+        public void StartChat() {
+            this.Dispatcher.Invoke((Action)(() => { this.Content = new ChatUC(); }));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) {

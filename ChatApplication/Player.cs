@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.IO;
 using NAudio.Wave;
 using System.Threading;
+using ChatApplication.UserControls;
 
 namespace ChatApplication {
     public class Player {
@@ -23,8 +24,10 @@ namespace ChatApplication {
         public StreamReader Reader { get; set; }
 
         private WaveIn waveIn;
+        private bool micOn = true;
         public int DeviceInNumber = 0;
         private WaveOut waveOut;
+        private bool spOn = true;
         private BufferedWaveProvider waveProvider;
         private UncompressedPcmChatCodec audioCodec;
 
@@ -58,6 +61,8 @@ namespace ChatApplication {
                 waveIn.DataAvailable -= waveIn_DataAvailable;
                 waveIn.StopRecording();
                 waveIn.Dispose();
+                waveOut.Stop();
+                waveOut.Dispose();
             }
         }
 
@@ -77,7 +82,7 @@ namespace ChatApplication {
             waveOut = new WaveOut();
             waveProvider = new BufferedWaveProvider(audioCodec.RecordFormat);
             waveOut.Init(waveProvider);
-            waveOut.Play(); // TODO: MUTE UNMUTE
+            waveOut.Play();
         }
 
         private void InitializeWaveIn() {
@@ -86,10 +91,11 @@ namespace ChatApplication {
             waveIn.DeviceNumber = DeviceInNumber;
             waveIn.WaveFormat = audioCodec.RecordFormat;
             waveIn.DataAvailable += waveIn_DataAvailable;
-            waveIn.StartRecording(); // TODO: MUTE UNMUTE
+            waveIn.StartRecording();
         }
 
         public void PlayAudio(byte[] receivedAudioBytes) {
+            if (!spOn) return;
             byte[] decoded = audioCodec.Decode(receivedAudioBytes, 0, receivedAudioBytes.Length);
             waveProvider.AddSamples(decoded, 0, decoded.Length);
         }
@@ -106,9 +112,7 @@ namespace ChatApplication {
             return instance;
         }
 
-        public void SendNickName(string myName) {
-            WriteLine("MyName:" + myName);
-        }
+        public void SendNickName(string myName) { WriteLine("MyName:" + myName); }
 
         public void InitConnection(string serverIp) {
             if (TcpClient != null) return;
@@ -127,6 +131,30 @@ namespace ChatApplication {
                 return false;
             }
             return true;
+        }
+
+        public void ToggleMic() {
+            if (micOn) {
+                waveIn.StopRecording();
+                ChatUC.GetInstance().SetMicButtonText("UnMute");
+                micOn = false;
+            } else {
+                waveIn.StartRecording();
+                ChatUC.GetInstance().SetMicButtonText("Mute");
+                micOn = true;
+            }
+        }
+
+        public void ToggleSpeaker() {
+            if (spOn) {
+                waveOut.Stop();
+                ChatUC.GetInstance().SetSpButtonText("SP Off");
+                spOn = false;
+            } else {
+                waveOut.Play();
+                ChatUC.GetInstance().SetSpButtonText("SP On");
+                spOn = true;
+            }
         }
 
         private void ReadMessages() {
