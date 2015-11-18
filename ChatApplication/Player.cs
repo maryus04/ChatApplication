@@ -10,6 +10,8 @@ using System.IO;
 using NAudio.Wave;
 using System.Threading;
 using ChatApplication.UserControls;
+using NAudioDemo.NetworkChatDemo;
+using NSpeex;
 
 namespace ChatApplication {
     public class Player {
@@ -17,7 +19,7 @@ namespace ChatApplication {
 
         public string Name { get; set; }
 
-        public TcpClient TcpClient { get; set; }
+        public TcpClient tcpClient { get; set; }
         public bool Connected { get; set; }
 
         public StreamWriter Writer { get; set; }
@@ -29,7 +31,7 @@ namespace ChatApplication {
         private WaveOut waveOut;
         private bool spOn = true;
         private BufferedWaveProvider waveProvider;
-        private UncompressedPcmChatCodec audioCodec;
+        private SpeexChatCodec audioCodec;
 
         public Player() { instance = this; }
 
@@ -52,12 +54,12 @@ namespace ChatApplication {
         }
 
         public void CloseConnection() {
-            if (TcpClient != null && TcpClient.Connected) {
+            if (tcpClient != null && tcpClient.Connected) {
                 Connected = false;
                 WriteLine("CloseConnection:");
                 Reader.Close();
                 Writer.Close();
-                TcpClient.Close();
+                tcpClient.Close();
                 waveIn.DataAvailable -= waveIn_DataAvailable;
                 waveIn.StopRecording();
                 waveIn.Dispose();
@@ -67,13 +69,13 @@ namespace ChatApplication {
         }
 
         public void InitializeStream() {
-            Writer = new StreamWriter(TcpClient.GetStream());
-            Reader = new StreamReader(TcpClient.GetStream());
+            Writer = new StreamWriter(tcpClient.GetStream());
+            Reader = new StreamReader(tcpClient.GetStream());
             InitializeAudioStream();
         }
 
         private void InitializeAudioStream() {
-            audioCodec = new UncompressedPcmChatCodec();
+            audioCodec = new SpeexChatCodec(BandMode.Wide, 16000, "Speex Wide Band (16kHz)");
             InitializeWaveIn();
             InitializeWaveOut();
         }
@@ -87,7 +89,7 @@ namespace ChatApplication {
 
         private void InitializeWaveIn() {
             waveIn = new WaveIn();
-            waveIn.BufferMilliseconds = 200;
+            waveIn.BufferMilliseconds = 50;
             waveIn.DeviceNumber = DeviceInNumber;
             waveIn.WaveFormat = audioCodec.RecordFormat;
             waveIn.DataAvailable += waveIn_DataAvailable;
@@ -115,7 +117,7 @@ namespace ChatApplication {
         public void SendNickName(string myName) { WriteLine("MyName:" + myName); }
 
         public void InitConnection(string serverIp) {
-            if (TcpClient != null) return;
+            if (tcpClient != null) return;
             if (!InitializeConnection(serverIp)) return;
 
             InitializeStream();
@@ -125,8 +127,8 @@ namespace ChatApplication {
 
         private bool InitializeConnection(string serverIp) {
             try {
-                TcpClient = new TcpClient();
-                TcpClient.Connect(serverIp, 4296);
+                tcpClient = new TcpClient();
+                tcpClient.Connect(serverIp, 4296);
             } catch {
                 return false;
             }

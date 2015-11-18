@@ -37,6 +37,9 @@
     <Reference Include="NAudio">
       <HintPath>D:\School\proiect\ChatApplication\Library\NAudio.dll</HintPath>
     </Reference>
+    <Reference Include="NSpeex">
+      <HintPath>..\Library\NSpeex.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition">
       <HintPath>D:\School\proiect\ChatApplication\Library\System.ComponentModel.Composition.dll</HintPath>
@@ -62,7 +65,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ServerFinder.cs" />
-    <Compile Include="UncompressedPcmChatCodec.cs" />
+    <Compile Include="SpeexChatCodec.cs" />
     <Compile Include="UserControls\ChatUC.xaml.cs">
       <DependentUpon>ChatUC.xaml</DependentUpon>
     </Compile>

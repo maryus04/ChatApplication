@@ -24,7 +24,7 @@ namespace ChatApplication {
 
                         Ping ping = new Ping();
                         ping.PingCompleted += new PingCompletedEventHandler(PingCompleted);
-                        ping.SendAsync(ip, 100, ip);
+                        ping.SendAsync(ip, 600, ip);
                     } catch (Exception) { }
                 }
             }
