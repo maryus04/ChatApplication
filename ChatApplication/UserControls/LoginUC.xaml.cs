@@ -25,25 +25,16 @@ namespace ChatApplication.UserControls {
         private static LoginUC instance;
 
         private ObservableCollection<string> serversIp = new ObservableCollection<string>();
-        private ObservableCollection<string> waveInCollection = new ObservableCollection<string>();
 
         public LoginUC() {
             instance = this;
             InitializeComponent();
             ipList.ItemsSource = serversIp;
-            waveInList.ItemsSource = waveInCollection;
-            InitializeWaveIn();
+
         }
 
         public static LoginUC GetInstance() {
             return instance;
-        }
-
-        private void InitializeWaveIn() {
-            for (int n = 0; n < WaveIn.DeviceCount; n++) {
-                var capabilities = WaveIn.GetCapabilities(n);
-                waveInCollection.Add(capabilities.ProductName);
-            }
         }
 
         public void AddServerIp(string ip) {
@@ -64,12 +55,12 @@ namespace ChatApplication.UserControls {
             ServerFinder.RefreshServerList();
         }
 
-        private void waveInList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            Player.GetInstance().DeviceInNumber = waveInList.SelectedIndex;
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             Player.GetInstance().CloseConnection();
+        }
+
+        private void Button_Click_1 (object sender, RoutedEventArgs e) {
+            this.Content=new OptionsUC ();
         }
 
         //public void SetError(string error) {

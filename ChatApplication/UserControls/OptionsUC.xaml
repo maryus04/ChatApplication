@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="ChatApplication.UserControls.OptionsUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="506.4">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ListBox Name="waveInList" Margin="0,10,23.2,15.6" Grid.Row="1" HorizontalAlignment="Right" Width="200" SelectionChanged="waveInList_SelectionChanged" SelectionMode="Single" SelectedIndex="0"/>
+        <Label Content="Input device" HorizontalAlignment="Right" VerticalAlignment="Center" Height="26" Width="75" Margin="0,5,80,5"/>
+        <Button Content="Back" HorizontalAlignment="Right" Margin="0,11.4,10,10" VerticalAlignment="Center" Width="75" Click="Button_Click" Grid.Row="2" Height="21"/>
+        <Button Content="Apply" HorizontalAlignment="Left" Margin="10,10.4,0,11" VerticalAlignment="Center" Width="75" Grid.Row="2" Height="21" Grid.Column="1" Click="Button_Click_1"/>
+        <ListBox HorizontalAlignment="Left" Margin="19.8,10,0,15.6" Width="200" Grid.Column="1" Grid.Row="1"/>
+        <Label Content="Output device" Margin="80,5,0,5" VerticalAlignment="Center" Grid.Column="1" Height="26" HorizontalAlignment="Left" Width="85"/>
+    </Grid>
+</UserControl>
