@@ -73,6 +73,7 @@
       <DependentUpon>LoginUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\OptionsUC.xaml.cs">
+    <Compile Include="UserControls\ParagraphExtension.cs" />
       <DependentUpon>OptionsUC.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
@@ -129,6 +130,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Emoticons\straightFace.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Emoticons\veryHappy.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Emoticons\verySad.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Emoticons\d.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Emoticons\sad.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Emoticons\smiley.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
