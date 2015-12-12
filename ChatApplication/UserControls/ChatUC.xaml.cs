@@ -13,8 +13,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using ChatApplication.Utils;
 
 namespace ChatApplication.UserControls {
     /// <summary>
@@ -32,7 +31,8 @@ namespace ChatApplication.UserControls {
             {":))", @"\Emoticons\veryHappy.jpg"},
             {":((", @"\Emoticons\verySad.jpg"}
         };
-        string mycolor;
+        string myColor;
+        string myFont;
 
         private ObservableCollection<string> playerListCollection = new ObservableCollection<string>();
 
@@ -48,7 +48,7 @@ namespace ChatApplication.UserControls {
 
         private void send_KeyDown(object sender, KeyEventArgs e) {
             if (send.Text == "" || e.Key != Key.Enter) return;
-            Player.GetInstance().WriteLine("MainWindowMessage:" + "[col]" + mycolor + "[/col]" + send.Text);
+            Player.GetInstance().WriteLine("MainWindowMessage:" + "[col]" + myColor + "[/col]" + send.Text);
             send.Text = "";
         }
 
@@ -155,6 +155,22 @@ namespace ChatApplication.UserControls {
 
         public void SetSpButtonText(string text) {
             this.Dispatcher.Invoke((Action)(() => { toggleSpButton.Content = text; }));
+        }
+
+        private void colorComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            ComboBoxItem colorItem = (ComboBoxItem)colorComboBox.SelectedItem;
+            string color = colorItem.Content.ToString();
+            colorComboBox.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString(color);
+            send.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString(color);
+            myColor = color;
+        }
+
+        private void fontComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            ComboBoxItem fontItem = (ComboBoxItem)fontComboBox.SelectedItem;
+            string font = fontItem.Content.ToString();
+            var fontFamilyConvertor = new FontFamilyConverter();
+            send.FontFamily = fontFamilyConvertor.ConvertFromString(font) as FontFamily;
+            myFont = font;
         }
     }
 }

@@ -34,8 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NAudio">
-      <HintPath>D:\School\proiect\ChatApplication\Library\NAudio.dll</HintPath>
+    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NSpeex">
       <HintPath>..\Library\NSpeex.dll</HintPath>
@@ -72,7 +73,7 @@
     <Compile Include="UserControls\LoginUC.xaml.cs">
       <DependentUpon>LoginUC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ParagraphExtension.cs" />
+    <Compile Include="Utils\ParagraphExtension.cs" />
     <Compile Include="UserControls\OptionsUC.xaml.cs">
       <DependentUpon>OptionsUC.xaml</DependentUpon>
     </Compile>
@@ -122,6 +123,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
