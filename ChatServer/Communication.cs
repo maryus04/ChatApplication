@@ -54,8 +54,22 @@ namespace ChatServer {
                     case "Sound:":
                         Server.SendServerMessageExcept(_client, "Sound:" + _message);
                         break;
+                    case "History:":
+                        SetHistory(_message);
+                        break;
                 }
             }
+        }
+
+        private static void SetHistory(string message) {
+            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\history-took.hst", message);
+            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\history.hst")) File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\history.hst", "");
+            var file = new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\history.hst");
+            var newFile = new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\history-took.hst");
+            if (File.ReadAllText(file.FullName).Length <= File.ReadAllText(newFile.FullName).Length) {
+                File.WriteAllText(file.FullName, File.ReadAllText(newFile.FullName));
+            }
+            Server.SendServerToAll("History:" + File.ReadAllText(file.FullName));
         }
 
         private static void SetMethodMessage(string message) {

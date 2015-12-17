@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,6 +26,7 @@ namespace ChatApplication {
                         Player.GetInstance().Name = _message;
                         Player.GetInstance().Connected = true;
                         LoginUC.GetInstance().StartChat();
+                        Player.GetInstance().SendChat();
                         break;
                     case "NickNameInUse:":
                         //MainWindow.getInstance().SetError("Nickname already in use"); TODO: TREAT ERROR IN LOGINUC
@@ -43,8 +45,15 @@ namespace ChatApplication {
                     case "Sound:":
                         Player.GetInstance().PlayAudio(MessageParser.ToByteArray(_message));
                         break;
+                    case "History:":
+                        SetHistory(_message);
+                        break;
                 }
             }
+        }
+
+        private static void SetHistory(string _message) {
+            ChatUC.GetInstance().AppendText(_message.Replace(@"\new_line\", "\r\n"));
         }
 
         private static void SetMethodMessage(string message) {

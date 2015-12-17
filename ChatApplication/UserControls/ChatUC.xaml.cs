@@ -69,6 +69,10 @@ namespace ChatApplication.UserControls {
             }));
         }
 
+        public string GetText() {
+            return new TextRange(chatTextBox.Document.ContentStart, chatTextBox.Document.ContentEnd).Text;
+        }
+
         private Paragraph CreateParagraph(string message) {
             Paragraph para = new Paragraph();
             para.BorderBrush = Brushes.Red;

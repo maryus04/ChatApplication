@@ -54,6 +54,7 @@ namespace ChatApplication {
         }
 
         public void CloseConnection() {
+            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\history.hst", ChatUC.GetInstance().GetText());
             if (tcpClient != null && tcpClient.Connected) {
                 Connected = false;
                 WriteLine("CloseConnection:");
@@ -106,12 +107,17 @@ namespace ChatApplication {
             byte[] encoded = audioCodec.Encode(e.Buffer, 0, e.BytesRecorded);
             WriteLine("Sound:" + string.Join(",", encoded));
         }
-
+        
         public static Player GetInstance() {
             if (instance == null) {
                 instance = new Player();
             }
             return instance;
+        }
+
+        public void SendChat() {
+            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\history.hst")) return;
+            WriteLine("History:" + File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\history.hst").Replace("\r\n", @"\new_line\"));
         }
 
         public void SendNickName(string myName) { WriteLine("MyName:" + myName); }
