@@ -21,15 +21,18 @@ namespace ChatServer {
             set { nickName = value; }
         }
 
-        public bool isConnected;
-
         public NetworkStream GetStream() {
             return TcpClient.GetStream();
         }
 
         public void WriteLine(string message) {
-            Writer.WriteLine(message);
-            Writer.Flush();
+            try {
+                Writer.WriteLine(message);
+                Writer.Flush();
+            } catch (Exception) {
+                ConsoleManager.Communication(NickName + " lost connection.");
+                Dispose();
+            }
         }
 
         public bool IsTcpConnected() {
@@ -40,9 +43,9 @@ namespace ChatServer {
             try {
                 return Reader.ReadLine();
             } catch (Exception) {
-                Reader.Close();
-                Writer.Close();
-                TcpClient.Close();
+                Server._nickName.Remove(NickName);
+                ConsoleManager.Communication(NickName + " lost connection.");
+                Dispose();
             }
             return "";
         }
@@ -52,7 +55,6 @@ namespace ChatServer {
         }
 
         public void Dispose() {
-            isConnected = false;
             Reader.Close();
             Writer.Close();
             TcpClient.Close();

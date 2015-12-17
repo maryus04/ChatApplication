@@ -137,10 +137,12 @@ namespace ChatApplication {
 
         public void ToggleMic() {
             if (micOn) {
+                waveIn.DataAvailable -= waveIn_DataAvailable;
                 waveIn.StopRecording();
                 ChatUC.GetInstance().SetMicButtonText("UnMute");
                 micOn = false;
             } else {
+                waveIn.DataAvailable += waveIn_DataAvailable;
                 waveIn.StartRecording();
                 ChatUC.GetInstance().SetMicButtonText("Mute");
                 micOn = true;

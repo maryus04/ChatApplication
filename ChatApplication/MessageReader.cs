@@ -32,10 +32,10 @@ namespace ChatApplication {
                     case "MainWindowMessage:":
                         string name = MessageParser.GetNick(_message);
                         _message = MessageParser.RemoveNickFrom(_message);
-                        ChatUC.GetInstance().AppendText(name + _message + "\r\n");
+                        ChatUC.GetInstance().AppendText(name + _message);
                         break;
                     case "MainWindowServerMessage:":
-                        ChatUC.GetInstance().AppendText(_message + "\r\n");
+                        ChatUC.GetInstance().AppendText(_message);
                         break;
                     case "Players:":
                         ChatUC.GetInstance().SetNickNames(_message.Split(','));

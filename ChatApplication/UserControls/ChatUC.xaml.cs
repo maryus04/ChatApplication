@@ -13,6 +13,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using ChatApplication.Utils;
 
 namespace ChatApplication.UserControls {
@@ -39,6 +40,7 @@ namespace ChatApplication.UserControls {
         public ChatUC() {
             instance = this;
             InitializeComponent();
+            chatTextBox.IsDocumentEnabled = true;
             playerList.ItemsSource = playerListCollection;
         }
 
@@ -48,7 +50,7 @@ namespace ChatApplication.UserControls {
 
         private void send_KeyDown(object sender, KeyEventArgs e) {
             if (send.Text == "" || e.Key != Key.Enter) return;
-            Player.GetInstance().WriteLine("MainWindowMessage:" + "[col]" + myColor + "[/col]" + send.Text);
+            Player.GetInstance().WriteLine("MainWindowMessage:" + "[col]" + myColor + "[/col]" + "[fon]" + myFont + "[/fon]" + send.Text);
             send.Text = "";
         }
 
@@ -70,30 +72,53 @@ namespace ChatApplication.UserControls {
         private Paragraph CreateParagraph(string message) {
             Paragraph para = new Paragraph();
             para.BorderBrush = Brushes.Red;
-            para.BorderThickness = new Thickness(1);
             var emoticons = emoticonMap.Keys.Cast<string>();
-            var emoteExists = emoticons.Any(emote => message.Contains(emote));
             var color = Brushes.Red;
+            para.Padding = new Thickness(0);
+            var fontFamilyConvertor = new FontFamilyConverter();
+            var font = fontFamilyConvertor.ConvertFromString("Segoe UI") as FontFamily;
 
             if (message.Contains("[col]")) {
                 var colorCode = message.Substring(message.IndexOf("[col]") + 5, message.IndexOf("[/col]") - (message.IndexOf("[col]") + 5));
+                message = message.Replace("[col]" + colorCode + "[/col]", "");
                 color = GetColor(colorCode);
+
+                var fontCode = message.Substring(message.IndexOf("[fon]") + 5, message.IndexOf("[/fon]") - (message.IndexOf("[fon]") + 5));
+                message = message.Replace("[fon]" + fontCode + "[/fon]", "");
+                font = fontFamilyConvertor.ConvertFromString(fontCode) as FontFamily;
+
                 para.BorderBrush = color;
+                para.FontFamily = font;
 
                 var name = message.TakeWhile(elem => !(elem.Equals(':')));
                 var parsedStringName = new string(name.ToArray());
                 var regex = new Regex(parsedStringName);
                 message = regex.Replace(message, "", 1);
                 parsedStringName += message[0];
-                parsedStringName += "\n\t";
                 message = message.Substring(1);
                 para.AddText(parsedStringName, Brushes.Black);
             }
-            if (!emoteExists) {
-                para.AddText(message, color);
-                return para;
-            } else {
-                while (!message.Equals("")) {
+            var emoteExists = emoticons.Any(emote => message.Contains(emote));
+            while (emoteExists || message.ToLower().Contains("https") || message.ToLower().Contains("http") || message.ToLower().Contains("www")) {
+                message = message.Trim();
+                if ("".Equals(message)) break;
+                if (message.ToLower().StartsWith("https") || message.ToLower().StartsWith("http") || message.ToLower().StartsWith("www")) {
+                    Hyperlink link = new Hyperlink();
+                    link.IsEnabled = true;
+                    link.Inlines.Add(" (Click) ");
+                    var startIndex = message.IndexOf("https:");
+                    if (startIndex == -1) startIndex = message.IndexOf("http:");
+                    if (startIndex == -1) startIndex = message.IndexOf("www.");
+                    if (startIndex != -1) {
+                        var endIndex = message.IndexOf(" ", startIndex);
+                        if (endIndex == -1) endIndex = message.Count();
+                        var prefix = message.Substring(startIndex, endIndex - startIndex).StartsWith("www.") ? "http://" : "";
+                        link.NavigateUri = new Uri(prefix + message.Substring(startIndex, endIndex - startIndex));
+                        para.Inlines.Add(link);
+                        link.RequestNavigate += new RequestNavigateEventHandler(link_RequestNavigate);
+                        message = message.Replace(message.Substring(startIndex, endIndex - startIndex), "");
+                    }
+                } else if (emoticons.Any(emote => message.Substring(0, message.IndexOf(" ") == -1 ? message.Count() : message.IndexOf(" ")).Contains(emote))) {
                     var parsedMessage = message.TakeWhile(elem => !emoteStart.Contains(elem));
                     var parsedStringMessage = new string(parsedMessage.ToArray());
                     if (!parsedStringMessage.Equals("")) {
@@ -102,7 +127,7 @@ namespace ChatApplication.UserControls {
                         para.AddText(parsedStringMessage, color);
                     }
                     if (message.Count() == 0) break;
-                    var emotes = emoticons.Where(emote => message.Substring(0, MAX_EMOTE_LENGTH).Contains(emote));
+                    var emotes = emoticons.Where(emote => message.Substring(0, message.Count() < MAX_EMOTE_LENGTH ? message.Count() : MAX_EMOTE_LENGTH).Contains(emote));
                     if (emotes.Count() > 0) {
                         para.Inlines.Add(GetImageBySymbol(emotes.First()));
                         message = message.Substring(emotes.First().Count());
@@ -110,9 +135,20 @@ namespace ChatApplication.UserControls {
                         para.AddText("" + message[0], color);
                         message = message.Substring(1);
                     }
+                } else {
+                    para.AddText(message.Substring(0, message.IndexOf(" ") == -1 ? message.Count() : message.IndexOf(" ")) + " ", color);
+                    var regex = new Regex(message.Substring(0, message.IndexOf(" ") == -1 ? message.Count() : message.IndexOf(" ")));
+                    message = regex.Replace(message, "", 1);
                 }
-                return para;
             }
+            if (!"".Equals(message)) {
+                para.AddText(message, color);
+            }
+            return para;
+        }
+
+        private void link_RequestNavigate(object sender, RequestNavigateEventArgs e) {
+            System.Diagnostics.Process.Start(e.Uri.ToString());
         }
 
         private SolidColorBrush GetColor(string colorCode) {

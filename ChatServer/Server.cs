@@ -5,6 +5,7 @@ using System.Threading;
 using Chat = System.Net;
 using System.Collections;
 using System.Net.Sockets;
+using System.Collections.Generic;
 
 namespace ChatServer {
     public class Server {
@@ -66,13 +67,6 @@ namespace ChatServer {
 
         private void newCommunication(TcpClient connection) {
             new Communication(connection);
-        }
-
-        internal static void Win() {
-            ConsoleManager.Server("Game finished");
-            foreach (ServerClient client in _nickName.Values) {
-                client.WriteLine("GameFinished:");
-            }
         }
     }
 }

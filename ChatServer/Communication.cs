@@ -77,7 +77,6 @@ namespace ChatServer {
 
         private void AcceptConnection() {
             Server._nickName.Add(_client.NickName, _client);
-            _client.isConnected = true;
             _client.WriteLine("ConnectionAccepted:" + _client.NickName);
             ConsoleManager.Communication(_client.NickName + " is now connected to server." + " Address " + _client.GetIp() + " Port:" + _client.GetPort());
         }
