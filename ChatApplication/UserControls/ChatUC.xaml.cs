@@ -133,8 +133,8 @@ namespace ChatApplication.UserControls {
                     if (message.Count() == 0) break;
                     var emotes = emoticons.Where(emote => message.Substring(0, message.Count() < MAX_EMOTE_LENGTH ? message.Count() : MAX_EMOTE_LENGTH).Contains(emote));
                     if (emotes.Count() > 0) {
-                        para.Inlines.Add(GetImageBySymbol(emotes.First()));
-                        message = message.Substring(emotes.First().Count());
+                        para.Inlines.Add(GetImageBySymbol(emotes.Last()));
+                        message = message.Substring(emotes.Last().Count());
                     } else {
                         para.AddText("" + message[0], color);
                         message = message.Substring(1);
